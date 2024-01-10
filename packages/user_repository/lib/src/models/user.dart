@@ -27,6 +27,12 @@ class MyUser extends Equatable {
     );
   }
 
+  static const empty = MyUser(
+    id: '',
+    email: '',
+    name: '',
+  );
+
   static MyUser fromEntity(MyUserEntity myUserEntity) {
     return MyUser(
       id: myUserEntity.id,
