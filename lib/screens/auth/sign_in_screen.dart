@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:learn_bloc_firebase/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:learn_bloc_firebase/constant.dart';
 import 'package:learn_bloc_firebase/screens/components/text_field_custom.dart';
 
@@ -84,35 +86,45 @@ class _SignInScreenState extends State<SignInScreen> {
               },
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(top: 15),
-            width: deviceWidth(context) * 0.5,
-            child: TextButton(
-              style: TextButton.styleFrom(
-                  elevation: 2,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      20,
+          !signInRequired
+              ? Container(
+                  margin: const EdgeInsets.only(top: 15),
+                  width: deviceWidth(context) * 0.5,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                        elevation: 2,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            20,
+                          ),
+                        )),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        context.read<SignInBloc>().add(
+                              SignInRequired(
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                              ),
+                            );
+                      }
+                    },
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                      child: Text(
+                        'Sign In',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  )),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {}
-              },
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-                child: Text(
-                  'Sign In',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
                   ),
-                ),
-              ),
-            ),
-          )
+                )
+              : const CircularProgressIndicator()
         ],
       ),
     );

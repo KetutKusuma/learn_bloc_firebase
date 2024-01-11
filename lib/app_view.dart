@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_bloc_firebase/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:learn_bloc_firebase/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:learn_bloc_firebase/screens/auth/welcome_screen.dart';
 import 'package:learn_bloc_firebase/screens/home/home_screen.dart';
 
@@ -34,7 +35,7 @@ class MyAppView extends StatelessWidget {
             outline: Colors.blueGrey,
             tertiary: Colors.yellowAccent,
             primary: Colors.purple.withOpacity(0.7),
-            onPrimary: Colors.lightBlue,
+            // onPrimary: Colors.lightBlue,
             secondary: Colors.purpleAccent,
             onSecondary: Colors.lightBlueAccent,
           ),
@@ -43,7 +44,13 @@ class MyAppView extends StatelessWidget {
           builder: (context, state) {
             if (state.authenticationStatus ==
                 AuthenticationStatus.authenticated) {
-              return const HomeScreen();
+              return BlocProvider(
+                create: (context) => SignInBloc(
+                  userRepository:
+                      context.read<AuthenticationBloc>().userRepository,
+                ),
+                child: const HomeScreen(),
+              );
             } else {
               return const WelcomeScreen();
             }
